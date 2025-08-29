@@ -6,4 +6,5 @@ class User < ApplicationRecord
   devise :database_authenticatable,
          :registerable,
          :validatable
+  has_many :chat_sessions
 end

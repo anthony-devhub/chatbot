@@ -7,4 +7,8 @@ Rails.application.routes.draw do
     post 'signin',  to: 'sessions#create'
     delete 'signout', to: 'sessions#destroy'
   end
+
+  resources :chat_sessions, only: [:create] do
+    resources :messages, only: [:index, :create], module: :chat_sessions
+  end
 end

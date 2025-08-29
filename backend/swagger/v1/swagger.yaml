@@ -3,7 +3,81 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 paths:
+  "/chat_sessions/{chat_session_id}/messages":
+    get:
+      summary: Fetch full message history
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: chat_session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: messages retrieved
+        '401':
+          description: unauthorized
+    post:
+      summary: Send a message, get AI response
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: chat_session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: message sent and AI responded
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+              - content
+  "/chat_sessions":
+    post:
+      summary: Create a new chat session (optional initial message)
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: chat session created
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                initial_message:
+                  type: string
   "/users/signup":
     post:
       summary: Creates a user
