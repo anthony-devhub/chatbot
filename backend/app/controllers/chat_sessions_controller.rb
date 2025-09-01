@@ -9,7 +9,7 @@ class ChatSessionsController < ApplicationController
       end
       service = OpenRouterService.new(messages: prompt)
       ai_response_text = service.call
-      ai_message = chat_session.messages.create!(role: :ai, content: ai_response_text)
+      ai_message = chat_session.messages.create!(role: :assistant, content: ai_response_text)
 
       render json: { chat_session: chat_session, user_message: user_message, ai_message: ai_message }, status: :created
     else
