@@ -36,7 +36,6 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
       produces 'application/json'
       security [{ bearerAuth: [] }]
       parameter name: :chat_session_id, in: :path, type: :string
-      # parameter name: :Authorization, in: :header, type: :string, required: true
 
       response '200', 'messages retrieved' do
         let!(:message) { Message.create!(content: "Hello!", role: :user, chat_session: chat_session) }

@@ -16,4 +16,20 @@ class ChatSessionsController < ApplicationController
       render json: { chat_session: chat_session }, status: :created
     end
   end
+
+  def summarize
+    chat_session = ChatSession.find(params[:id])
+
+    transcript = chat_session.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n")
+
+    service = OpenRouterService.new(messages: [
+      { role: "system", content: "Summarize the following chat into a concise, neutral summary." },
+      { role: "user", content: transcript }
+    ])
+    ai_response_text = service.call
+
+    ai_message = chat_session.messages.create!(role: :assistant, content: ai_response_text)
+
+    render json: { chat_session: chat_session, ai_message: ai_message }
+  end
 end

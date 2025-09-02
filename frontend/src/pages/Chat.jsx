@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Button, TextField, Box, Typography, Paper } from "@mui/material";
-import { createChatSession, sendMessage } from "../services/chat";
+import { createChatSession, sendMessage, summarizeChat } from "../services/chat";
 
 export default function ChatPage() {
   const [chatSessionId, setChatSessionId] = useState(null);
@@ -11,16 +11,16 @@ export default function ChatPage() {
 
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [navigate]);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -50,6 +50,24 @@ export default function ChatPage() {
       alert("Something went wrong");
     }
   };
+
+  const handleSummarize = async () => {
+  if (!chatSessionId) {
+    alert("No chat session to summarize yet!");
+    return;
+  }
+
+  try {
+    const data = await summarizeChat(token, chatSessionId);
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: data.ai_message.content },
+    ]);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to summarize chat");
+  }
+};
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt={2} width={800}>
@@ -100,6 +118,9 @@ export default function ChatPage() {
         />
         <Button variant="contained" color="primary" onClick={handleSend}>
           Send
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={handleSummarize}>
+          Summarize Chat
         </Button>
       </Box>
     </Box>

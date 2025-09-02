@@ -78,6 +78,23 @@ paths:
                   type: string
                 initial_message:
                   type: string
+  "/chat_sessions/{chat_session_id}/summarize":
+    post:
+      summary: Summarize a chat session
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: chat_session_id
+        in: path
+        description: ChatSession ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: summary generated
   "/users/signup":
     post:
       summary: Creates a user

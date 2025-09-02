@@ -18,8 +18,7 @@ export async function createChatSession(token, title, initialMessage) {
 
 export async function sendMessage(token, chatSessionId, content) {
   const response = await fetch(
-    `http://localhost:3000/chat_sessions/${chatSessionId}/messages`,
-    {
+    `http://localhost:3000/chat_sessions/${chatSessionId}/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,5 +30,20 @@ export async function sendMessage(token, chatSessionId, content) {
   );
 
   if (!response.ok) throw new Error("Failed to send message");
+  return response.json();
+}
+
+export async function summarizeChat(token, chatSessionId) {
+  const response = await fetch(`http://localhost:3000/chat_sessions/${chatSessionId}/summarize`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) throw new Error("Failed to summarize chat");
+
   return response.json();
 }

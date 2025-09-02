@@ -10,5 +10,6 @@ Rails.application.routes.draw do
 
   resources :chat_sessions, only: [:create] do
     resources :messages, only: [:index, :create], module: :chat_sessions
+    post :summarize, on: :member
   end
 end
