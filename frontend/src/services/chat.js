@@ -1,4 +1,4 @@
-export async function createChatSession(token, title, initialMessage) {
+export async function createChatSession(token, title, initialMessage, tone) {
   const response = await fetch("http://localhost:3000/chat_sessions", {
     method: "POST",
     headers: {
@@ -9,6 +9,7 @@ export async function createChatSession(token, title, initialMessage) {
     body: JSON.stringify({
       title,
       initial_message: initialMessage,
+      tone: tone,
     }),
   });
 
@@ -25,7 +26,7 @@ export async function sendMessage(token, chatSessionId, content) {
         Accept: "*/*",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, tone }),
     }
   );
 

@@ -36,7 +36,8 @@ RSpec.describe 'ChatSessions API', type: :request do
         type: :object,
         properties: {
           title: { type: :string },
-          initial_message: { type: :string }
+          initial_message: { type: :string },
+          tone: { type: :string }
         }
       }
 

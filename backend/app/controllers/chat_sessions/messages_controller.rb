@@ -19,13 +19,13 @@ class ChatSessions::MessagesController < ApplicationController
     end
 
     # call AI
-    service = OpenRouterService.new(messages: prompt)
+    service = OpenRouterService.new(messages: prompt, tone: params[:tone])
     ai_response_text = service.call
 
     # store AI response
     ai_message = @chat_session.messages.create!(role: :assistant, content: ai_response_text)
 
-    render json: { user_message: user_message, ai_message: ai_message }
+    render json: { user_message: user_message, ai_message: ai_message, tone: params[:tone] }
   end
 
   private

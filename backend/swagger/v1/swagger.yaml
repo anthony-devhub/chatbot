@@ -53,6 +53,8 @@ paths:
               properties:
                 content:
                   type: string
+                tone:
+                  type: string
               required:
               - content
   "/chat_sessions":
@@ -77,6 +79,8 @@ paths:
                 title:
                   type: string
                 initial_message:
+                  type: string
+                tone:
                   type: string
   "/chat_sessions/{chat_session_id}/summarize":
     post:

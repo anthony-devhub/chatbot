@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Button, TextField, Box, Typography, Paper } from "@mui/material";
+import { AppBar, Toolbar, Button, TextField, Box, Typography, Paper, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { createChatSession, sendMessage, summarizeChat } from "../services/chat";
 
 export default function ChatPage() {
   const [chatSessionId, setChatSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [tone, setTone] = useState("friendly");
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function ChatPage() {
     try {
       if (!chatSessionId) {
         // First-time chat
-        const data = await createChatSession(token, "Chat with AI", input);
+        const data = await createChatSession(token, "Chat with AI", input, tone);
         setChatSessionId(data.chat_session.id);
 
         setMessages([
@@ -37,7 +38,7 @@ export default function ChatPage() {
         ]);
       } else {
         // Continuing chat
-        const data = await sendMessage(token, chatSessionId, input);
+        const data = await sendMessage(token, chatSessionId, input, tone);
         setMessages((prev) => [
           ...prev,
           { role: "user", content: data.user_message.content },
@@ -103,6 +104,20 @@ export default function ChatPage() {
           </Typography>
         ))}
       </Paper>
+
+      <ToggleButtonGroup
+        value={tone}
+        exclusive
+        onChange={(e, newTone) => {
+          if (newTone) setTone(newTone);
+        }}
+        sx={{ mb: 2 }}
+      >
+        <ToggleButton value="friendly">😊 Friendly</ToggleButton>
+        <ToggleButton value="sarcastic">😏 Sarcastic</ToggleButton>
+        <ToggleButton value="professional">💼 Professional</ToggleButton>
+        <ToggleButton value="mentor">🎓 Mentor</ToggleButton>
+      </ToggleButtonGroup>
 
       <Box
         display="flex"

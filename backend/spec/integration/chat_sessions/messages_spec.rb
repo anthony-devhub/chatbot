@@ -66,11 +66,11 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
       parameter name: :message, in: :body, schema: {
         type: :object,
         properties: {
-          content: { type: :string }
+          content: { type: :string },
+          tone: { type: :string }
         },
         required: ['content']
       }
-      # parameter name: :Authorization, in: :header, type: :string, required: true
 
       response '200', 'message sent and AI responded' do
         let(:chat_session_id) { chat_session.id }
@@ -81,7 +81,7 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
           expect(data['user_message']['content']).to eq(message[:content])
           expect(data['user_message']['role']).to eq("user")
           expect(data['ai_message']['content']).to eq("Hello from AI!")
-          expect(data['ai_message']['role']).to eq("ai")
+          expect(data['ai_message']['role']).to eq("assistant")
         end
       end
 
