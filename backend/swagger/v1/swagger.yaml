@@ -57,6 +57,41 @@ paths:
                   type: string
               required:
               - content
+  "/chat_sessions/{chat_session_id}/suggestions":
+    get:
+      summary: Generate suggestions for partial content
+      tags:
+      - Suggestions
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: chat_session_id
+        in: path
+        description: ID of the chat session
+        required: true
+        schema:
+          type: string
+      - name: partial_content
+        in: query
+        description: Partial content text
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Suggestions generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  suggestions:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - suggestions
+        '422':
+          description: Missing partial_content
   "/chat_sessions":
     post:
       summary: Create a new chat session (optional initial message)

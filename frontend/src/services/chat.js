@@ -17,7 +17,7 @@ export async function createChatSession(token, title, initialMessage, tone) {
   return response.json();
 }
 
-export async function sendMessage(token, chatSessionId, content) {
+export async function sendMessage(token, chatSessionId, content, tone) {
   const response = await fetch(
     `http://localhost:3000/chat_sessions/${chatSessionId}/messages`, {
       method: "POST",

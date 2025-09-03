@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Button, TextField, Box, Typography, Paper, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { createChatSession, sendMessage, summarizeChat } from "../services/chat";
+import { autoComplete } from "../services/autocomplete";
+import { debounce } from "lodash";
 
 export default function ChatPage() {
   const [chatSessionId, setChatSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [input, setInput] = useState("");
   const [tone, setTone] = useState("friendly");
   const token = localStorage.getItem("token");
@@ -53,22 +56,43 @@ export default function ChatPage() {
   };
 
   const handleSummarize = async () => {
-  if (!chatSessionId) {
-    alert("No chat session to summarize yet!");
-    return;
-  }
+    if (!chatSessionId) {
+      alert("No chat session to summarize yet!");
+      return;
+    }
 
-  try {
-    const data = await summarizeChat(token, chatSessionId);
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: data.ai_message.content },
-    ]);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to summarize chat");
-  }
-};
+    try {
+      const data = await summarizeChat(token, chatSessionId);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: data.ai_message.content },
+      ]);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to summarize chat");
+    }
+  };
+
+  const debouncedAutoComplete = useMemo(
+    () =>
+      debounce(async (value) => {
+        if (!chatSessionId || !value.trim()) return;
+        try {
+          const data = await autoComplete(token, chatSessionId, value);
+          console.log("data", data)
+          setSuggestions(data.suggestions);
+        } catch (err) {
+          console.error(err);
+        }
+      }, 1500), // waits 1.5s after user stops typing
+    [chatSessionId, token]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedAutoComplete.cancel();
+    };
+  }, [debouncedAutoComplete]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt={2} width={800}>
@@ -129,8 +153,32 @@ export default function ChatPage() {
           label="Type your message"
           fullWidth
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            debouncedAutoComplete(e.target.value);
+          }}
         />
+        {suggestions.length > 0 && (
+          <Box mt={1}>
+            {suggestions.map((s, i) => (
+              <Paper
+                key={i}
+                sx={{
+                  p: 1,
+                  mb: 1,
+                  cursor: "pointer",
+                  "&:hover": { backgroundColor: "#ffffffff", color: "#000" }
+                }}
+                onClick={() => {
+                  setSuggestions([])
+                  return setInput(input + " " + s);
+                }} // append suggestion to input
+              >
+                <Typography variant="body2">{s}</Typography>
+              </Paper>
+            ))}
+          </Box>
+        )}
         <Button variant="contained" color="primary" onClick={handleSend}>
           Send
         </Button>
