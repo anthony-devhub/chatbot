@@ -10,9 +10,13 @@ class JwtService
 
   def self.decode(token)
     body = JWT.decode(token, SECRET_KEY)[0]
-    raise 'Token expired' if Time.at(body['exp']) < Time.now
-    return HashWithIndifferentAccess.new(body)
-  rescue
-    nil
+    if Time.at(body['exp']) < Time.now
+      raise JWT::ExpiredSignature, 'Token has expired'
+    end
+    HashWithIndifferentAccess.new(body)
+  rescue JWT::ExpiredSignature => e
+    raise e
+  rescue JWT::DecodeError => e
+    raise e
   end
 end

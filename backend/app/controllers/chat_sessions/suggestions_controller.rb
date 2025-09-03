@@ -24,5 +24,7 @@ class ChatSessions::SuggestionsController < ApplicationController
 
   def set_chat_session
     @chat_session = current_user.chat_sessions.find(params[:chat_session_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Chat session not found" }, status: :not_found
   end
 end
