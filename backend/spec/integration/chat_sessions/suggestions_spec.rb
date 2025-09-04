@@ -32,7 +32,7 @@ RSpec.describe "ChatSessions::Suggestions", type: :request do
       tags "Suggestions"
       consumes "application/json"
       produces "application/json"
-      security [{ bearerAuth: [] }]
+      security [ { bearerAuth: [] } ]
       parameter name: :chat_session_id, in: :path, type: :string, description: "ID of the chat session"
       parameter name: :partial_content, in: :query, type: :string, description: "Partial content text"
 
@@ -48,7 +48,7 @@ RSpec.describe "ChatSessions::Suggestions", type: :request do
                    items: { type: :string }
                  }
                },
-               required: ["suggestions"]
+               required: [ "suggestions" ]
 
         run_test! do |response|
           data = JSON.parse(response.body)

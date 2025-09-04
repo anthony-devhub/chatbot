@@ -1,7 +1,7 @@
 class ChatSessions::MessagesController < ApplicationController
   before_action :set_chat_session
 
-  DEPTH = [ENV["DEPTH"].to_i, 50].min
+  DEPTH = [ ENV["DEPTH"].to_i, 50 ].min
 
   def index
     render json: @chat_session.messages.order(:created_at)

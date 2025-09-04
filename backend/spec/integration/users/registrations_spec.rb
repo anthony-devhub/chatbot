@@ -15,7 +15,7 @@ RSpec.describe 'Users::Registrations', type: :request do
               password: { type: :string },
               password_confirmation: { type: :string }
             },
-            required: ['email', 'password', 'password_confirmation']
+            required: [ 'email', 'password', 'password_confirmation' ]
           }
         }
       }

@@ -31,7 +31,7 @@ RSpec.describe 'ChatSessions API', type: :request do
       tags 'Messages'
       consumes 'application/json'
       produces 'application/json'
-      security [{ bearerAuth: [] }]
+      security [ { bearerAuth: [] } ]
       parameter name: :chat_session, in: :body, schema: {
         type: :object,
         properties: {
@@ -74,7 +74,7 @@ RSpec.describe 'ChatSessions API', type: :request do
       tags "Messages"
       consumes "application/json"
       produces "application/json"
-      security [{ bearerAuth: [] }]
+      security [ { bearerAuth: [] } ]
       parameter name: :chat_session_id, in: :path, type: :string, description: "ChatSession ID"
 
       response "200", "summary generated" do

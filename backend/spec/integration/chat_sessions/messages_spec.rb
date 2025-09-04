@@ -34,7 +34,7 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
       tags 'Messages'
       consumes 'application/json'
       produces 'application/json'
-      security [{ bearerAuth: [] }]
+      security [ { bearerAuth: [] } ]
       parameter name: :chat_session_id, in: :path, type: :string
 
       response '200', 'messages retrieved' do
@@ -61,7 +61,7 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
       tags 'Messages'
       consumes 'application/json'
       produces 'application/json'
-      security [{ bearerAuth: [] }]
+      security [ { bearerAuth: [] } ]
       parameter name: :chat_session_id, in: :path, type: :string
       parameter name: :message, in: :body, schema: {
         type: :object,
@@ -69,7 +69,7 @@ RSpec.describe 'ChatSessions::Messages', type: :request do
           content: { type: :string },
           tone: { type: :string }
         },
-        required: ['content']
+        required: [ 'content' ]
       }
 
       response '200', 'message sent and AI responded' do

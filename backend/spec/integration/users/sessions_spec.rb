@@ -12,7 +12,7 @@ RSpec.describe 'Users::Sessions API', type: :request do
           email: { type: :string },
           password: { type: :string }
         },
-        required: ['email', 'password']
+        required: [ 'email', 'password' ]
       }
 
       response '201', 'user authenticated' do

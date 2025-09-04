@@ -1,4 +1,4 @@
-require 'jwt'
+require "jwt"
 
 class JwtService
   SECRET_KEY = Rails.application.credentials.secret_key_base
@@ -10,8 +10,8 @@ class JwtService
 
   def self.decode(token)
     body = JWT.decode(token, SECRET_KEY)[0]
-    if Time.at(body['exp']) < Time.now
-      raise JWT::ExpiredSignature, 'Token has expired'
+    if Time.at(body["exp"]) < Time.now
+      raise JWT::ExpiredSignature, "Token has expired"
     end
     HashWithIndifferentAccess.new(body)
   rescue JWT::ExpiredSignature => e

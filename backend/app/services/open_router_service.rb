@@ -50,6 +50,6 @@ class OpenRouterService
     return messages unless tone && TONE_PROMPTS.key?(tone)
 
     system_prompt = { role: "system", content: TONE_PROMPTS[tone] }
-    [system_prompt] + messages
+    [ system_prompt ] + messages
   end
 end

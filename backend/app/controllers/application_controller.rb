@@ -4,15 +4,15 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_request
-    header = request.headers['Authorization']
-    token = header&.split(' ')&.last
-    return render json: { error: 'Unauthorized' }, status: :unauthorized unless token
+    header = request.headers["Authorization"]
+    token = header&.split(" ")&.last
+    return render json: { error: "Unauthorized" }, status: :unauthorized unless token
 
     begin
       payload = JwtService.decode(token)
-      @current_user = User.find(payload['sub'])
+      @current_user = User.find(payload["sub"])
     rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::API
 
   def summarize_messages(messages)
     prompt = [
-      { role: "system", content: "Summarize the following chat into a concise, neutral summary. Only include details explicitly stated by the participants. Avoid adding external concepts or assumptions." },
+      { role: "system", content: "Summarize the following chat into a concise, neutral summary. Only include details explicitly stated by the participants. Avoid adding external concepts or assumptions." }
     ] + messages
 
     call_ai(messages: prompt, tone: "neutral")

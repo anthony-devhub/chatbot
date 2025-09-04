@@ -35,5 +35,4 @@ class SuggestionGenerator
 
     JSON.parse(cleaned)
   end
-
 end
