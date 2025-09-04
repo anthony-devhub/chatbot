@@ -19,4 +19,16 @@ class ApplicationController < ActionController::API
   def current_user
     @current_user
   end
+
+  def call_ai(messages:, tone: nil)
+    OpenRouterService.new(messages: messages, tone: tone).call
+  end
+
+  def summarize_messages(messages)
+    prompt = [
+      { role: "system", content: "Summarize the following chat into a concise, neutral summary. Only include details explicitly stated by the participants. Avoid adding external concepts or assumptions." },
+    ] + messages
+
+    call_ai(messages: prompt, tone: "neutral")
+  end
 end

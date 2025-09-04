@@ -9,8 +9,8 @@ class ChatSessionsController < ApplicationController
         { role: m.role, content: m.content }
       end
 
-      service = OpenRouterService.new(messages: prompt, tone: params[:tone])
-      ai_response_text = service.call
+      ai_response_text = call_ai(messages: prompt, tone: params[:tone])
+
       ai_message = chat_session.messages.create!(role: :assistant, content: ai_response_text)
 
       render json: { chat_session: chat_session, user_message: user_message, ai_message: ai_message, tone: params[:tone] }, status: :created
@@ -24,14 +24,12 @@ class ChatSessionsController < ApplicationController
 
     transcript = chat_session.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n")
 
-    service = OpenRouterService.new(messages: [
-      { role: "system", content: "Summarize the following chat into a concise, neutral summary." },
-      { role: "user", content: transcript }
-    ])
-    ai_response_text = service.call
+    ai_response_text = summarize_messages(transcript)
 
     ai_message = chat_session.messages.create!(role: :assistant, content: ai_response_text)
 
     render json: { chat_session: chat_session, ai_message: ai_message }
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Chat session not found" }, status: :not_found
   end
 end

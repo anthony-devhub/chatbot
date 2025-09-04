@@ -9,8 +9,6 @@ class ChatSessions::SuggestionsController < ApplicationController
     end
 
     # Call a service object to generate suggestions
-    # service = OpenRouterService.new(messages: prompt, tone: params[:tone])
-    # ai_response_text = service.call
     generator = SuggestionGenerator.new(
       chat_session: @chat_session,
       partial_content: partial_content
