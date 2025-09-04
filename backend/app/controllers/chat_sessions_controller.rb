@@ -22,7 +22,9 @@ class ChatSessionsController < ApplicationController
   def summarize
     chat_session = ChatSession.find(params[:id])
 
-    transcript = chat_session.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n")
+    transcript = chat_session.messages.order(:created_at).map do |m|
+      { role: m.role, content: m.content }
+    end
 
     ai_response_text = summarize_messages(transcript)
 
